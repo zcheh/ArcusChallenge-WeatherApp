@@ -1,0 +1,9 @@
+<html>
+    <head>
+        <title>{{title}}</title>
+    </head>
+    <body>
+        {{errors}}
+	{{!base}}
+    </body>
+</html>
