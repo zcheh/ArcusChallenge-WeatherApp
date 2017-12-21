@@ -31,11 +31,19 @@ def get_weather2(lat, long):
 	for each in range(0, 7):	
 		weather_url ="{0}/{1}/{2},{3},{4}?exclude={5}".format(darksky_url, darksky_key, lat, long, day, excludes)
 		darksky_call = urllib2.urlopen(weather_url)
-		weather_json = json.load(darksky_call)
-		weather_list.append(weather_json)
+		
+		#Basic status code check to ensure we get back data
+		status_code = darksky_call.getcode()
+		if status_code == 200:
+			weather_json = json.load(darksky_call)
+			day_weather = weather_json
+			weather_list.append({"status": status_code, "result": day_weather, "time": day})
+		else:
+			weather_list.append({"status": status_code, "result": None, "time": day})
+	
 		day -= day_lenth
 	
-	json_return = json.dumps(weather_list)
-	return json_return	
+	weather_full_json = json.dumps(weather_list)
+	return weather_full_json	
 
 app.run(host='192.168.1.210', port = 8000)
