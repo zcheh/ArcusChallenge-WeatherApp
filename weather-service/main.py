@@ -38,6 +38,8 @@ class Point(object):
 			self.long = float(long)
 		except ValueError:
 			self.is_valid = 0
+			self.lat = None 
+			self.long = None
 		if self.lat > 90.0 or self.lat < -90.0 or self.long > 180.0 or self.long < -180.0:
 			self.is_valid = 0
 		else:
