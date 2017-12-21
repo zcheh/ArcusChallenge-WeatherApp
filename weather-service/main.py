@@ -51,9 +51,13 @@ def get_days_weather(each, weather_list, lat, long):
 	
 	#Build URL for Dark Sky request
 	weather_url ="{0}/{1}/{2},{3},{4}?exclude={5}".format(darksky_url, darksky_key, lat, long, day, excludes)
-	darksky_call = urllib2.urlopen(weather_url)
-	status_code = darksky_call.getcode()
 
+	try:
+		darksky_call = urllib2.urlopen(weather_url)
+		status_code = darksky_call.getcode()
+	except HTTPError, error:
+		status_code = error.code
+ 
 	#Read status code of request to determine if request successful
 	if status_code == 200:
 		weather_json = json.load(darksky_call)
