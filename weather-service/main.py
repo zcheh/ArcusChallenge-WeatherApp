@@ -34,14 +34,12 @@ day_lenth = 86400
 class Point(object):
 	def __init__(self, lat, long):
 		try:
-			float(lat)
-			float(long)
+			self.lat = float(lat)
+			self.long = float(long)
 		except ValueError:
 			self.is_valid = 0
-		self.lat = lat
-		self.long = long
-		if lat > 90.0 or lat < -90.0 or long > 180.0 or long < -180.0:
-			self.is_valid = 0	
+		if self.lat > 90.0 or self.lat < -90.0 or self.long > 180.0 or self.long < -180.0:
+			self.is_valid = 0
 		else:
 			self.is_valid = 1
 
@@ -67,14 +65,14 @@ def get_weather(lat, long):
 	#Create Point
 	coordinate = Point(lat, long)
 
-	if coordinate.is_valid:	
+	if coordinate.is_valid == 1:	
 		#List where request results will be stored
 		weather_list = []
 		jobs = []
 		
 		#Stats thread to call each day separately
 		for x in range(7):
-			process = threading.Thread(target = get_days_weather, args = (x, weather_list, lat, long))
+			process = threading.Thread(target = get_days_weather, args = (x, weather_list, coordinate.lat, coordinate.long))
 			jobs.append(process)
 			process.start()
 		for proc in jobs:
