@@ -11,7 +11,7 @@
 # Imports
 # --------------------------------------------------------------------------- #
 
-from bottle import Bottle
+from bottle import Bottle, HTTPError
 import urllib2 
 import json
 from time import time
@@ -30,6 +30,20 @@ excludes = "currently,minutely,hourly,alerts,flags"
 #Current Time
 current_time = int(time())
 day_lenth = 86400
+
+class Point(object):
+	def __init__(self, lat, long):
+		try:
+			float(lat)
+			float(long)
+		except ValueError:
+			self.is_valid = 0
+		self.lat = lat
+		self.long = long
+		if lat > 90.0 or lat < -90.0 or long > 180.0 or long < -180.0:
+			self.is_valid = 0	
+		else:
+			self.is_valid = 1
 
 def get_days_weather(each, weather_list, lat, long):
 	#Computes the epoch time for this day
@@ -50,19 +64,26 @@ def get_days_weather(each, weather_list, lat, long):
 	
 @app.route('/getweather/<lat>,<long>')
 def get_weather(lat, long):
-	#List where request results will be stored
-	weather_list = []
-	jobs = []
-	
-	#Stats thread to call each day separately
-	for x in range(7):
-		process = threading.Thread(target = get_days_weather, args = (x, weather_list, lat, long))
-		jobs.append(process)
-		process.start()
-	for proc in jobs:
-		proc.join()
-	weather_full_json = json.dumps(weather_list)
-	return weather_full_json	
+	#Create Point
+	coordinate = Point(lat, long)
+
+	if coordinate.is_valid:	
+		#List where request results will be stored
+		weather_list = []
+		jobs = []
+		
+		#Stats thread to call each day separately
+		for x in range(7):
+			process = threading.Thread(target = get_days_weather, args = (x, weather_list, lat, long))
+			jobs.append(process)
+			process.start()
+		for proc in jobs:
+			proc.join()
+		weather_full_json = json.dumps(weather_list)
+		return weather_full_json	
+		
+	else:
+		return HTTPError(400, "Invalid latitude or longitude.")	
 
 app.run(host='192.168.1.210', port = 8000)
 	
