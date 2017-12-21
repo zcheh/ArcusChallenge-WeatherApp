@@ -19,9 +19,9 @@ import threading
 
 app = Bottle()
 
-######################################
+# --------------------------------------------------------------------------- #
 # Global Vars
-######################################
+# --------------------------------------------------------------------------- #
 #Dark Sky URL Params
 darksky_url = "https://api.darksky.net/forecast"
 darksky_key = "8bb170dfde985aeb11bc1e26ba2491e9"
@@ -32,10 +32,15 @@ current_time = int(time())
 day_lenth = 86400
 
 def get_days_weather(each, weather_list, lat, long):
+	#Computes the epoch time for this day
 	day = current_time - (day_lenth * each)
+	
+	#Build URL for Dark Sky request
 	weather_url ="{0}/{1}/{2},{3},{4}?exclude={5}".format(darksky_url, darksky_key, lat, long, day, excludes)
 	darksky_call = urllib2.urlopen(weather_url)
 	status_code = darksky_call.getcode()
+
+	#Read status code of request to determine if request successful
 	if status_code == 200:
 		weather_json = json.load(darksky_call)
 		day_weather = weather_json 
@@ -45,8 +50,11 @@ def get_days_weather(each, weather_list, lat, long):
 	
 @app.route('/getweather/<lat>,<long>')
 def get_weather(lat, long):
+	#List where request results will be stored
 	weather_list = []
 	jobs = []
+	
+	#Stats thread to call each day separately
 	for x in range(7):
 		process = threading.Thread(target = get_days_weather, args = (x, weather_list, lat, long))
 		jobs.append(process)
