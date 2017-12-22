@@ -92,5 +92,5 @@ def get_weather(lat, long):
 	else:
 		return HTTPError(400, "Invalid latitude or longitude.")	
 
-app.run(host='0.0.0.0', port = 8000)
+#app.run(host='0.0.0.0', port = 8000)
 	

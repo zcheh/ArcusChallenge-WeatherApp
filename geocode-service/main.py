@@ -41,4 +41,4 @@ def get_location(location):
 	else:
 		return HTTPError(400, "Unable to determine location")	
 
-app.run(host='192.168.1.210', port = 8001)
+#app.run(host='0.0.0.0', port = 8001)

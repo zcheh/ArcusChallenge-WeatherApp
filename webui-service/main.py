@@ -33,7 +33,6 @@ def display_weather():
 	geocode_service_url = quote("https://arcuschallenge-getlocation.appspot.com/getlocation/{0}".format(address), ':/?&=,')
 	try:
 		geocode_service_call = urlopen(geocode_service_url)
-		print geocode_service_url
 		geocode_status_code = geocode_service_call.getcode()
 	except HTTPError, error:
 		geocode_status_code = error.code
@@ -85,4 +84,4 @@ def display_weather():
 	else:
 		return index(errors=[error])
 
-app.run(host='192.168.1.210', port = 62100)
+#app.run(host='0.0.0.0', port = 62100)
