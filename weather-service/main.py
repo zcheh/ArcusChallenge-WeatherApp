@@ -12,7 +12,7 @@
 # --------------------------------------------------------------------------- #
 
 from bottle import Bottle, HTTPError
-import urllib2 
+from urllib2 import urlopen 
 import json
 from time import time
 import threading
@@ -53,7 +53,7 @@ def get_days_weather(each, weather_list, lat, long):
 	weather_url ="{0}/{1}/{2},{3},{4}?exclude={5}".format(darksky_url, darksky_key, lat, long, day, excludes)
 
 	try:
-		darksky_call = urllib2.urlopen(weather_url)
+		darksky_call = urlopen(weather_url)
 		status_code = darksky_call.getcode()
 	except HTTPError, error:
 		status_code = error.code
@@ -92,5 +92,5 @@ def get_weather(lat, long):
 	else:
 		return HTTPError(400, "Invalid latitude or longitude.")	
 
-app.run(host='192.168.1.210', port = 8000)
+app.run(host='0.0.0.0', port = 8000)
 	
