@@ -17,9 +17,9 @@ from time import time, strftime, localtime
 app = Bottle()
 
 @app.route('/')
-def index(errors=""):
+def index(errors=[]):
 	title = "Weather App"
-	header = "Enter info below:"
+	header = "Enter location below for previous weather:"
 	info = {"title": title, "header": header, "errors": errors}	
 	return template("index.tpl", info) 
 	
@@ -43,7 +43,7 @@ def display_weather():
                 lat = geocode_json["lat"]
                 long = geocode_json["lng"]
         else:
-                return index("Invalid Address - Please check, renter and try again.")
+                return index(errors=["Invalid Address - Please check, renter and try again."])
 
 
 	title = "Weather App"
@@ -72,17 +72,19 @@ def display_weather():
 				weather_summary = day_weather["summary"]
 				weather_high = day_weather["temperatureHigh"]
 				weather_low = day_weather["temperatureLow"]
-				weather_sunset = strftime('%Y-%m-%d %H:%M:%S', localtime(day_weather["sunsetTime"]))
-				weather_string = u"{0}; {1} high; {2} low; {3} sunset".format(weather_summary, weather_high, weather_low, weather_sunset)
+				weather_sunset = strftime('%I:%M %p', localtime(day_weather["sunsetTime"]))
 			else:
-				weather_string = "Could not get weather for this day."
+				weather_summary = "Could not get weather for this day."
+				weather_high = "Unknown"
+				weather_low = "Unknown"
+				weather_sunset = "Unknown"
 
-			weather_time = strftime('%Y-%m-%d', localtime(each_day["time"]))
-			content.append(u"Day {0} - {1}".format(weather_time, weather_string))
+			weather_time = strftime('%A, %B %d, %Y', localtime(each_day["time"]))
+			content.append([weather_time, weather_summary, weather_high, weather_low, weather_sunset])
 		
 		info = {"title": title, "header": header, "days": content, "errors": ""}
 		return template("display_weather.tpl", info)
 	else:
-		return index(error)
+		return index(errors=[error])
 
 app.run(host='192.168.1.210', port = 62100)
