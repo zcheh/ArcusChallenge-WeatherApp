@@ -11,13 +11,12 @@
           <th>Description</th>
           <th>High</th>
           <th>Low</th>
-          <th>Sunset</th> 
         </tr> 
        </thead> 
        <tbody>
          % for day in days:
           <tr> 
-            <th scope="row">{{day[0]}}</th> <td>{{day[1]}}</td> <td>{{day[2]}}</td> <td>{{day[3]}}</td> <td>{{day[4]}}</td>
+            <th scope="row">{{day[0]}}</th> <td>{{day[1]}}</td> <td>{{day[2]}}&#8457</td> <td>{{day[3]}}&#8457</td> 
           </tr>
          % end 
        </tbody> 

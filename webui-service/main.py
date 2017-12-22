@@ -72,15 +72,13 @@ def display_weather():
 				weather_summary = day_weather["summary"]
 				weather_high = day_weather["temperatureHigh"]
 				weather_low = day_weather["temperatureLow"]
-				weather_sunset = strftime('%I:%M %p', localtime(day_weather["sunsetTime"]))
 			else:
 				weather_summary = "Could not get weather for this day."
 				weather_high = "Unknown"
 				weather_low = "Unknown"
-				weather_sunset = "Unknown"
 
 			weather_time = strftime('%A, %B %d, %Y', localtime(each_day["time"]))
-			content.append([weather_time, weather_summary, weather_high, weather_low, weather_sunset])
+			content.append([weather_time, weather_summary, weather_high, weather_low])
 		
 		info = {"title": title, "header": header, "days": content, "errors": ""}
 		return template("display_weather.tpl", info)
