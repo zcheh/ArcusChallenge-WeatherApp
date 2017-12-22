@@ -16,7 +16,8 @@
       body, html {
 	width: 100%;
         height: 100%;
-      }
+	background-color: #8a8e99; 
+     }
   </style>
 
     </head>
