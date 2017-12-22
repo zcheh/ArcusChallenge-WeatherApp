@@ -12,6 +12,7 @@
 from bottle import Bottle, request, template
 from urllib2 import urlopen, quote, HTTPError
 import json
+from time import time, strftime, localtime
 
 app = Bottle()
 
@@ -44,7 +45,26 @@ def display_weather():
 	#Check weather call status code
 	if weather_status_code == 200:
 		weather_json = json.load(weather_service_call) 
-		info = {"title": title, "header": header, "days": weather_json, "errors": ""}		 
+		content = []
+		 
+		#Loop through each day weather and take variables that we want to display
+		for each_day in weather_json:
+			
+			#Check each days weather to see if we got weather for that day
+			if each_day["status"] == 200:
+				day_weather = each_day["result"]["daily"]["data"][0]
+				weather_summary = day_weather["summary"]
+				weather_high = day_weather["temperatureHigh"]
+				weather_low = day_weather["temperatureLow"]
+				weather_sunset = strftime('%Y-%m-%d %H:%M:%S', localtime(day_weather["sunsetTime"]))
+				weather_string = u"{0}; {1} high; {2} low; {3} sunset".format(weather_summary, weather_high, weather_low, weather_sunset)
+			else:
+				weather_string = "Could not get weather for this day."
+
+			weather_time = strftime('%Y-%m-%d', localtime(each_day["time"]))
+			content.append(u"Day {0} - {1}".format(weather_time, weather_string))
+		
+		info = {"title": title, "header": header, "days": content, "errors": ""}
 		return template("display_weather.tpl", info)
 	else:
 		return index(error)
