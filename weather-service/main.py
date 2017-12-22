@@ -47,7 +47,7 @@ class Point(object):
 
 def get_days_weather(each, weather_list, lat, long):
 	#Computes the epoch time for this day
-	day = current_time - (day_lenth * each)
+	day = current_time - (day_lenth * (each + 1))
 	
 	#Build URL for Dark Sky request
 	weather_url ="{0}/{1}/{2},{3},{4}?exclude={5}".format(darksky_url, darksky_key, lat, long, day, excludes)
@@ -62,9 +62,9 @@ def get_days_weather(each, weather_list, lat, long):
 	if status_code == 200:
 		weather_json = json.load(darksky_call)
 		day_weather = weather_json 
-		weather_list.append({"status": status_code, "result": day_weather, "time": day})
+		weather_list[each] = {"status": status_code, "result": day_weather, "time": day_weather["daily"]["data"][0]["time"]}
 	else:
-		weather_list.append({"status": status_code, "result": None, "time": day})
+		weather_list[each] = {"status": status_code, "result": None, "time": day}
 	
 @app.route('/getweather/<lat>,<long>')
 def get_weather(lat, long):
@@ -72,12 +72,15 @@ def get_weather(lat, long):
 	coordinate = Point(lat, long)
 
 	if coordinate.is_valid == 1:	
-		#List where request results will be stored
-		weather_list = []
+		num_of_days = 7
+
+		#Create a list with an empty item for each day. We then can store the results in order so we do not have to sort later.	
+		weather_list = [None] * num_of_days 
 		jobs = []
 		
+		num_of_days = 7
 		#Stats thread to call each day separately
-		for x in range(7):
+		for x in range(0,num_of_days):
 			process = threading.Thread(target = get_days_weather, args = (x, weather_list, coordinate.lat, coordinate.long))
 			jobs.append(process)
 			process.start()
