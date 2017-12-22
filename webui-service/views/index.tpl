@@ -8,6 +8,7 @@
        <input id="address" class="form-control" name="address" type="text" placeholder="City, zip, or place" required>
     </div>
       <input class="btn btn-default btn-block" value="Get Weather" type="submit" />
+      <a href="https://darksky.net/poweredby/">Powered by Dark Sky</a>
   </form>
  </div>
 </div>

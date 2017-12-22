@@ -10,7 +10,7 @@
 
     <style>
       .bg-1 { 
-        background-color: #474e5d; 
+        background-color: #8a8e99; 
         color: black;
       }
       body, html {
