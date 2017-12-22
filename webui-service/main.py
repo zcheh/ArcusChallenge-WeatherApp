@@ -26,9 +26,25 @@ def index(errors=""):
 
 @app.post('/weather')
 def display_weather():
-	#Get lat long from form 
-	lat = request.forms.get('lat')
-	long = request.forms.get('long')
+	#Get address (city, state) from form 
+	address = request.forms.get('address')
+	
+	#Build geocode url and make call
+	geocode_service_url = quote("https://arcuschallenge-getlocation.appspot.com/getlocation/{0}".format(address), ':/?&=,')
+	try:
+		geocode_service_call = urlopen(geocode_service_url)
+		print geocode_service_url
+		geocode_status_code = geocode_service_call.getcode()
+	except HTTPError, error:
+		geocode_status_code = error.code
+
+        if geocode_status_code == 200:
+                geocode_json = json.load(geocode_service_call)
+                lat = geocode_json["lat"]
+                long = geocode_json["lng"]
+        else:
+                return index("Invalid Address - Please check, renter and try again.")
+
 
 	title = "Weather App"
 	header = "Weather for ({0}, {1})".format(lat, long)

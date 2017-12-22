@@ -6,7 +6,6 @@
  % end
 </ul>
 <form action="/weather" method="post">
-    Latitude: <input name="lat" type="text" />
-    Longitude: <input name="long" type="text" />
+    City, State or Country: <input name="address" type="text" />
     <input value="Get Weather" type="submit" />
 </form>
