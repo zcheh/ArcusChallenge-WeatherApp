@@ -47,7 +47,7 @@ def display_weather():
 
 
 	title = "Weather App"
-	header = "Weather for ({0}, {1})".format(lat, long)
+	header = "Weather for {2} ({0}, {1})".format(lat, long, address)
 
 	#Build weather url and make call
 	weather_service_url = quote("https://arcuschallenge-getweather.appspot.com/getweather/{0},{1}".format(lat,long), ':/?&=,')
